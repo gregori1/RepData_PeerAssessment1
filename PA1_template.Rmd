@@ -13,23 +13,38 @@ activity <- read.csv("activity.csv")
 kroki <- activity$steps
 dzien <- activity$date
 inter <- activity$interval
-```
-
-## What is mean total number of steps taken per day?
-```{r}
-head(activity)
 activity2 <- activity[!is.na(activity$steps),]
 agregacja <- aggregate(list(kroki = kroki), list(dzien = dzien), FUN=sum)
+agregacja2 <- aggregate(activity2$steps, list(activity2$interval), FUN=mean)
+agregacjaZERO <- agregacja
+agregacjaZERO[is.na(agregacjaZERO)] <- 0
 agregacjaNA <- agregacja[!is.na(agregacja$kroki),]
 
-ggplot(data = agregacjaNA, aes(x=dzien, y=kroki))+geom_bar(stat = "identity", fill="steelblue")+geom_text(aes(label=kroki),vjust=-0.3, size=3.5)+theme_minimal()+theme(axis.text.x = element_text(angle=90,hjust = 1))
+```
+## What is mean total number of steps taken per day?
+```{r}
+## I use data without NA, but including 'zero-step' days
+
+ggplot(data=agregacjaZERO, aes(agregacjaZERO$kroki))+geom_histogram(breaks=seq(0,25000,by=5000),col="blue",aes(fill=..count..))+scale_fill_gradient("count", low="white", high="red")+ggtitle("Histogram total number of steps")
+summary(agregacjaZERO$kroki)
+
+agregacjaAVG <- mean(agregacjaNA$kroki)
+agregacjaMEDIAN <- median(agregacjaNA$kroki)
+
+agregacjaAVG  # mean number of steps taken per day
+
+agregacjaMEDIAN  # median number of steps taken per day
 
 ```
 
 ## What is the average daily activity pattern?
+```{r}
+ggplot(data = agregacjaNA, aes(x=dzien, y=kroki))+geom_bar(stat = "identity", fill="steelblue")+geom_text(aes(label=kroki),vjust=-0.3, size=3.5)+theme_minimal()+theme(axis.text.x = element_text(angle=90,hjust = 1))+ggtitle("Total number of steps per day (without zero-step days)")
 
+ggplot(data = agregacjaZERO, aes(x=dzien, y=kroki))+geom_bar(stat = "identity", fill="steelblue")+geom_text(aes(label=kroki),vjust=-0.3, size=3.5)+theme_minimal()+theme(axis.text.x = element_text(angle=90,hjust = 1))+ggtitle("Total number of steps per day (with zero-step days)")
+#plot(agregacja2$dzien, agregacja2$kroki, type = "1")
 
-
+```
 ## Imputing missing values
 
 

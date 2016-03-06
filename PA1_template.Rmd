@@ -24,9 +24,11 @@ agregacjaNA <- agregacja[!is.na(agregacja$kroki),]
 ## What is mean total number of steps taken per day?
 ```{r}
 ## I use data without NA, but including 'zero-step' days
+ggplot(data=agregacjaNA, aes(agregacjaNA$kroki))+geom_histogram(breaks=seq(0,25000,by=5000),col="blue",aes(fill=..count..))+scale_fill_gradient("count", low="white", high="red")+ggtitle("Histogram total number of steps without NA's")
+summary(agregacjaNA$kroki)
 
-ggplot(data=agregacjaZERO, aes(agregacjaZERO$kroki))+geom_histogram(breaks=seq(0,25000,by=5000),col="blue",aes(fill=..count..))+scale_fill_gradient("count", low="white", high="red")+ggtitle("Histogram total number of steps")
-summary(agregacjaZERO$kroki)
+ggplot(data=agregacjaZERO, aes(agregacjaZERO$kroki))+geom_histogram(breaks=seq(0,25000,by=5000),col="blue",aes(fill=..count..))+scale_fill_gradient("count", low="white", high="red")+ggtitle("Histogram total number of steps with NA's")
+summary(agregacja$kroki)
 
 agregacjaAVG <- mean(agregacjaNA$kroki)
 agregacjaMEDIAN <- median(agregacjaNA$kroki)
@@ -39,14 +41,24 @@ agregacjaMEDIAN  # median number of steps taken per day
 
 ## What is the average daily activity pattern?
 ```{r}
+plot(agregacja2$Group.1, agregacja2$x, type = "l",xlab="interval",ylab="avarage number of steps per day")
+
+maximumSteps <- agregacja2[which.max(agregacja2$x),1]
+maximumSteps # maximum steps during day in 5 munites period
+
+
 ggplot(data = agregacjaNA, aes(x=dzien, y=kroki))+geom_bar(stat = "identity", fill="steelblue")+geom_text(aes(label=kroki),vjust=-0.3, size=3.5)+theme_minimal()+theme(axis.text.x = element_text(angle=90,hjust = 1))+ggtitle("Total number of steps per day (without zero-step days)")
 
 ggplot(data = agregacjaZERO, aes(x=dzien, y=kroki))+geom_bar(stat = "identity", fill="steelblue")+geom_text(aes(label=kroki),vjust=-0.3, size=3.5)+theme_minimal()+theme(axis.text.x = element_text(angle=90,hjust = 1))+ggtitle("Total number of steps per day (with zero-step days)")
-#plot(agregacja2$dzien, agregacja2$kroki, type = "1")
 
 ```
 ## Imputing missing values
-
+```{r}
+val1 <- nrow(activity)
+val2 <- nrow(activity2)
+#Total number of NA's in the dataset
+val1 - val2
+```
 
 
 ## Are there differences in activity patterns between weekdays and weekends?
